@@ -1,0 +1,29 @@
+<div class="page">
+  <div class="header">
+    <div>
+      <h1>Bots</h1>
+      <p class="subtitle">Control bot cadence, top-ups, and monitor activity.</p>
+    </div>
+    <div class="actions">
+      <button class="ghost-btn" type="button">Start</button>
+      <button class="ghost-btn" type="button">Stop</button>
+    </div>
+  </div>
+
+  <div class="table">
+    <div class="table-head">
+      <div>Name</div>
+      <div>Status</div>
+      <div>Bids</div>
+      <div>Auctions</div>
+      <div>Last error</div>
+    </div>
+    <div class="table-row" *ngFor="let b of status">
+      <div>{{ b.name }}</div>
+      <div>{{ b.running ? 'Running' : 'Stopped' }}</div>
+      <div>{{ b.bids }}</div>
+      <div>{{ b.auctions }}</div>
+      <div>{{ b.lastError || '—' }}</div>
+    </div>
+  </div>
+</div>

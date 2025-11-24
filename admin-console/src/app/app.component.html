@@ -1,0 +1,24 @@
+<div class="app-shell">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">FA</div>
+      <div>
+        <div class="title">FlogIt Admin</div>
+        <div class="subtitle">Control panel</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a
+        *ngFor="let item of nav"
+        [routerLink]="item.path"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: item.exact }"
+        >{{ item.label }}</a
+      >
+    </nav>
+  </header>
+
+  <main class="main">
+    <router-outlet></router-outlet>
+  </main>
+</div>

@@ -1,0 +1,24 @@
+<div class="page">
+  <div class="header">
+    <div>
+      <h1>Auctions</h1>
+      <p class="subtitle">Edit listings, finish/cancel, reindex search.</p>
+    </div>
+    <button class="ghost-btn" type="button">Refresh</button>
+  </div>
+
+  <div class="table">
+    <div class="table-head">
+      <div>Title</div>
+      <div>Status</div>
+      <div>Ends</div>
+      <div>Reserve</div>
+    </div>
+    <div class="table-row" *ngFor="let a of placeholder">
+      <div>{{ a.title }}</div>
+      <div>{{ a.status }}</div>
+      <div>{{ a.end }}</div>
+      <div>{{ a.reserve }}</div>
+    </div>
+  </div>
+</div>
