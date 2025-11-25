@@ -28,6 +28,71 @@
   box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
 }
 
+.panels {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1.2fr 1fr;
+  align-items: start;
+}
+
+.panel {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 14px;
+  padding: 1rem;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
+}
+
+.panel.wide {
+  grid-column: span 2;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.chip {
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(248, 113, 113, 0.1);
+  color: #dc2626;
+  border: 1px solid rgba(248, 113, 113, 0.3);
+}
+
+.chip.running {
+  background: rgba(22, 163, 74, 0.1);
+  color: #16a34a;
+  border-color: rgba(22, 163, 74, 0.3);
+}
+
+.config-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 0.75rem;
+  color: #0f172a;
+}
+
+.config-grid label {
+  align-self: center;
+  color: #475569;
+}
+
+.config-grid input[type='text'],
+.config-grid input[type='number'] {
+  width: 100%;
+  padding: 0.45rem 0.6rem;
+  border-radius: 10px;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  background: rgba(248, 250, 252, 0.9);
+}
+
+.config-grid input[type='checkbox'] {
+  transform: scale(1.2);
+}
+
 .table {
   display: grid;
   gap: 0.5rem;
@@ -36,7 +101,7 @@
 .table-head,
 .table-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 2fr;
+  grid-template-columns: 1fr 1fr 0.8fr 0.8fr 0.8fr 2fr;
   padding: 0.75rem 1rem;
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.75);
@@ -47,4 +112,29 @@
 .table-head {
   font-weight: 600;
   color: #475569;
+}
+
+.activity {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.activity-row {
+  display: grid;
+  grid-template-columns: 80px 80px 140px 1fr;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.6rem 0.8rem;
+  border-radius: 10px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  background: rgba(248, 250, 252, 0.7);
+}
+
+.time {
+  color: #475569;
+}
+
+.event {
+  font-weight: 600;
 }

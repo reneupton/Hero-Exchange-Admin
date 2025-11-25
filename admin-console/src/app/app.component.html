@@ -1,22 +1,36 @@
 <div class="app-shell">
   <header class="topbar">
-    <div class="brand">
-      <div class="logo">FA</div>
-      <div>
-        <div class="title">FlogIt Admin</div>
-        <div class="subtitle">Control panel</div>
+    <div class="left">
+      <div class="brand">
+        <div class="logo">FA</div>
+        <div>
+          <div class="title">FlogIt Admin</div>
+          <div class="subtitle">Control panel</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <a
+          *ngFor="let item of nav"
+          [routerLink]="item.path"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: item.exact }"
+          >{{ item.label }}</a
+        >
+      </nav>
+    </div>
+    <div class="config-quick">
+      <label>API base</label>
+      <input type="text" [(ngModel)]="configForm.apiBase" placeholder="http://localhost:6001/" />
+      <label>Admin token</label>
+      <input type="text" [(ngModel)]="configForm.adminToken" placeholder="token" />
+      <div class="config-actions">
+        <button type="button" class="mini-btn ghost" (click)="resetForm()">Reset</button>
+        <button type="button" class="mini-btn" (click)="saveConfig()">Apply</button>
       </div>
     </div>
-    <nav class="nav">
-      <a
-        *ngFor="let item of nav"
-        [routerLink]="item.path"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: item.exact }"
-        >{{ item.label }}</a
-      >
-    </nav>
   </header>
+
+  <div class="toast global" *ngIf="message">{{ message }}</div>
 
   <main class="main">
     <router-outlet></router-outlet>

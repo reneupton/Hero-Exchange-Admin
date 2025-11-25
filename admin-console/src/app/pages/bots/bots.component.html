@@ -5,25 +5,88 @@
       <p class="subtitle">Control bot cadence, top-ups, and monitor activity.</p>
     </div>
     <div class="actions">
-      <button class="ghost-btn" type="button">Start</button>
-      <button class="ghost-btn" type="button">Stop</button>
+      <button class="ghost-btn" type="button" [disabled]="loading || running" (click)="startBots()">
+        Start
+      </button>
+      <button class="ghost-btn" type="button" [disabled]="loading || !running" (click)="stopBots()">
+        Stop
+      </button>
+      <button class="ghost-btn" type="button" [disabled]="loading" (click)="refreshAll()">Refresh</button>
     </div>
   </div>
 
-  <div class="table">
-    <div class="table-head">
-      <div>Name</div>
-      <div>Status</div>
-      <div>Bids</div>
-      <div>Auctions</div>
-      <div>Last error</div>
+  <div class="panels">
+    <div class="panel wide">
+      <div class="panel-head">
+        <h3>Status</h3>
+        <span class="chip" [class.running]="running">{{ running ? 'Running' : 'Stopped' }}</span>
+      </div>
+      <div class="table">
+        <div class="table-head">
+          <div>Name</div>
+          <div>Status</div>
+          <div>Bids</div>
+          <div>Auctions</div>
+          <div>Active</div>
+          <div>Last error</div>
+        </div>
+        <div class="table-row" *ngFor="let b of status">
+          <div>{{ b.name }}</div>
+          <div>{{ b.running ? 'Running' : 'Stopped' }}</div>
+          <div>{{ b.bids }}</div>
+          <div>{{ b.auctions }}</div>
+          <div>{{ b.activeAuctions || 0 }}</div>
+          <div>{{ b.lastError || '-' }}</div>
+        </div>
+      </div>
     </div>
-    <div class="table-row" *ngFor="let b of status">
-      <div>{{ b.name }}</div>
-      <div>{{ b.running ? 'Running' : 'Stopped' }}</div>
-      <div>{{ b.bids }}</div>
-      <div>{{ b.auctions }}</div>
-      <div>{{ b.lastError || '—' }}</div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <h3>Config</h3>
+        <button class="ghost-btn" type="button" [disabled]="loading" (click)="saveConfig()">Save</button>
+      </div>
+      <div class="config-grid" *ngIf="configDraft">
+        <label>API base</label>
+        <input type="text" [(ngModel)]="configDraft.api_base" />
+        <label>Identity URL</label>
+        <input type="text" [(ngModel)]="configDraft.identity_url" />
+        <label>Bot users (csv)</label>
+        <input type="text" [(ngModel)]="configDraft.bot_users" />
+        <label>Bid rate (per min)</label>
+        <input type="number" [(ngModel)]="configDraft.bid_rate_per_min" />
+        <label>Create rate (per min)</label>
+        <input type="number" [(ngModel)]="configDraft.create_rate_per_min" />
+        <label>Mystery interval (min)</label>
+        <input type="number" [(ngModel)]="configDraft.mystery_interval_min" />
+        <label>Daily interval (hrs)</label>
+        <input type="number" [(ngModel)]="configDraft.daily_interval_hours" />
+        <label>Max bids/auction</label>
+        <input type="number" [(ngModel)]="configDraft.max_bids_per_auction" />
+        <label>Max active auctions</label>
+        <input type="number" [(ngModel)]="configDraft.max_active_auctions_per_bot" />
+        <label>Min balance</label>
+        <input type="number" [(ngModel)]="configDraft.min_balance" />
+        <label>Auto top-up</label>
+        <input type="checkbox" [(ngModel)]="configDraft.auto_topup" />
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <h3>Activity</h3>
+      </div>
+      <div class="activity" *ngIf="activity.length; else emptyActivity">
+        <div class="activity-row" *ngFor="let e of activity">
+          <div class="time">{{ e.ts * 1000 | date: 'shortTime' }}</div>
+          <div class="bot">{{ e.bot }}</div>
+          <div class="event">{{ e.event }}</div>
+          <div class="data">{{ e.data | json }}</div>
+        </div>
+      </div>
+      <ng-template #emptyActivity>
+        <p class="subtitle">No activity yet.</p>
+      </ng-template>
     </div>
   </div>
 </div>

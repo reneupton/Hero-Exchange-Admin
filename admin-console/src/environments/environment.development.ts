@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  apiBase: 'http://localhost:6001/',
+  apiBase: '/api/',
   adminToken: 'changeme-admin-token',
 };

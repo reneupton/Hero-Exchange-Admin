@@ -4,21 +4,39 @@
       <h1>Users</h1>
       <p class="subtitle">Adjust balances, XP, avatars, cooldowns.</p>
     </div>
-    <button class="ghost-btn" type="button">Refresh</button>
+    <button class="ghost-btn" type="button" (click)="loadUsers()">Refresh</button>
   </div>
+
+  <div class="toast" *ngIf="message">{{ message }}</div>
+  <div class="toast error" *ngIf="error">{{ error }}</div>
 
   <div class="table">
     <div class="table-head">
-      <div>Username</div>
+      <div>User</div>
       <div>FLOG</div>
       <div>XP</div>
       <div>Level</div>
+      <div>Avatar</div>
+      <div>Actions</div>
     </div>
-    <div class="table-row" *ngFor="let u of placeholder">
-      <div>{{ u.username }}</div>
-      <div>{{ u.flog }}</div>
-      <div>{{ u.xp }}</div>
+    <div class="table-row" *ngFor="let u of users">
+      <div class="user-cell">
+        <div class="username">{{ u.username }}</div>
+      </div>
+      <div>{{ u.flogBalance }}</div>
+      <div>{{ u.experience }}</div>
       <div>{{ u.level }}</div>
+      <div class="avatar-cell">
+        <img *ngIf="u.avatarUrl" [src]="u.avatarUrl" alt="" />
+        <input type="text" placeholder="Avatar URL" [(ngModel)]="u.avatarUrl" />
+        <button type="button" class="mini-btn" (click)="updateAvatar(u.username, u.avatarUrl)">Save</button>
+      </div>
+      <div class="row-actions">
+        <button type="button" class="mini-btn" (click)="adjustBalance(u.username, 200)">+200 FLOG</button>
+        <button type="button" class="mini-btn ghost" (click)="adjustBalance(u.username, -200)">-200 FLOG</button>
+        <button type="button" class="mini-btn" (click)="adjustXp(u.username, 200)">+200 XP</button>
+        <button type="button" class="mini-btn ghost" (click)="resetCooldowns(u.username)">Reset cooldowns</button>
+      </div>
     </div>
   </div>
 </div>

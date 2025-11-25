@@ -1,44 +1,36 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { AdminConfigService } from './admin-config.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AdminApiService {
   private http = inject(HttpClient);
-  private apiBase = environment.apiBase.endsWith('/')
-    ? environment.apiBase
-    : `${environment.apiBase}/`;
-
-  private adminHeaders(): HttpHeaders {
-    return new HttpHeaders({
-      'X-Admin-Token': environment.adminToken,
-    });
-  }
+  private config = inject(AdminConfigService);
 
   get<T>(path: string, params?: any) {
-    return this.http.get<T>(`${this.apiBase}${path}`, {
-      headers: this.adminHeaders(),
+    return this.http.get<T>(`${this.config.apiBase}${path}`, {
+      headers: this.config.headers(),
       params,
     });
   }
 
   post<T>(path: string, body: any) {
-    return this.http.post<T>(`${this.apiBase}${path}`, body, {
-      headers: this.adminHeaders(),
+    return this.http.post<T>(`${this.config.apiBase}${path}`, body, {
+      headers: this.config.headers(),
     });
   }
 
   put<T>(path: string, body: any) {
-    return this.http.put<T>(`${this.apiBase}${path}`, body, {
-      headers: this.adminHeaders(),
+    return this.http.put<T>(`${this.config.apiBase}${path}`, body, {
+      headers: this.config.headers(),
     });
   }
 
   delete<T>(path: string) {
-    return this.http.delete<T>(`${this.apiBase}${path}`, {
-      headers: this.adminHeaders(),
+    return this.http.delete<T>(`${this.config.apiBase}${path}`, {
+      headers: this.config.headers(),
     });
   }
 }

@@ -1,9 +1,21 @@
 <div class="page">
-  <h1 class="title">Admin Dashboard</h1>
-  <p class="subtitle">Bot overview and platform health.</p>
+  <div class="header">
+    <div>
+      <h1 class="title">Admin Dashboard</h1>
+      <p class="subtitle">Live auctions, users, and bot health.</p>
+    </div>
+    <div class="actions">
+      <button class="ghost-btn" type="button" [disabled]="loading" (click)="loadMetrics()">Refresh</button>
+    </div>
+  </div>
+
+  <div class="meta" *ngIf="lastUpdated">
+    Last updated: {{ lastUpdated | date: 'shortTime' }}
+  </div>
+  <div class="toast error" *ngIf="error">{{ error }}</div>
 
   <div class="card-grid">
-    <div class="card" *ngFor="let card of cards">
+    <div class="card" *ngFor="let card of cards" [class.loading]="loading">
       <div class="card-title">{{ card.title }}</div>
       <div class="card-value">{{ card.value }}</div>
       <div class="card-hint">{{ card.hint }}</div>
