@@ -13,9 +13,10 @@
   <div class="table">
     <div class="table-head">
       <div>User</div>
-      <div>FLOG</div>
-      <div>XP</div>
+      <div>Gold</div>
+      <div>Power</div>
       <div>Level</div>
+      <div>Heroes</div>
       <div>Avatar</div>
       <div>Actions</div>
     </div>
@@ -24,17 +25,39 @@
         <div class="username">{{ u.username }}</div>
       </div>
       <div>{{ u.flogBalance }}</div>
-      <div>{{ u.experience }}</div>
+      <div>{{ u.totalHeroPower ?? u.experience ?? 0 }}</div>
       <div>{{ u.level }}</div>
+      <div class="heroes-cell">
+        <div class="hero-count">{{ (u.ownedHeroes || []).length }} heroes</div>
+        <div class="hero-list" *ngIf="(u.ownedHeroes || []).length">
+          <div class="hero-row" *ngFor="let h of (u.ownedHeroes || [])">
+            <span class="pill">{{ h.name }} ({{ h.rarity }})</span>
+            <button type="button" class="mini-btn ghost" (click)="removeHero(u.username, h.variantId)">Remove</button>
+          </div>
+        </div>
+        <div class="hero-actions">
+          <select [(ngModel)]="u.heroId">
+            <option *ngFor="let h of heroOptions" [value]="h.id">{{ h.name }}</option>
+          </select>
+          <select [(ngModel)]="u.heroRarity">
+            <option *ngFor="let r of rarities" [value]="r">{{ r }}</option>
+          </select>
+          <button type="button" class="mini-btn" (click)="addHero(u.username, u.heroId, u.heroRarity)">Add hero</button>
+          <select [(ngModel)]="u.heroRemoveVariant">
+            <option [ngValue]="undefined">Remove owned hero...</option>
+            <option *ngFor="let h of (u.ownedHeroes || [])" [value]="h.variantId">{{ h.name }} ({{ h.rarity }})</option>
+          </select>
+          <button type="button" class="mini-btn ghost" (click)="removeHero(u.username, u.heroRemoveVariant)">Remove selected</button>
+        </div>
+      </div>
       <div class="avatar-cell">
         <img *ngIf="u.avatarUrl" [src]="u.avatarUrl" alt="" />
         <input type="text" placeholder="Avatar URL" [(ngModel)]="u.avatarUrl" />
         <button type="button" class="mini-btn" (click)="updateAvatar(u.username, u.avatarUrl)">Save</button>
       </div>
       <div class="row-actions">
-        <button type="button" class="mini-btn" (click)="adjustBalance(u.username, 200)">+200 FLOG</button>
-        <button type="button" class="mini-btn ghost" (click)="adjustBalance(u.username, -200)">-200 FLOG</button>
-        <button type="button" class="mini-btn" (click)="adjustXp(u.username, 200)">+200 XP</button>
+        <button type="button" class="mini-btn" (click)="adjustBalance(u.username, 200)">+200 Gold</button>
+        <button type="button" class="mini-btn ghost" (click)="adjustBalance(u.username, -200)">-200 Gold</button>
         <button type="button" class="mini-btn ghost" (click)="resetCooldowns(u.username)">Reset cooldowns</button>
       </div>
     </div>

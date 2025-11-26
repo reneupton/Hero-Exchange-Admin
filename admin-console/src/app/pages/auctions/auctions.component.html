@@ -10,19 +10,30 @@
     </div>
   </div>
 
+  <div class="search-row">
+    <input
+      type="text"
+      placeholder="Search by title, status, full ID, or short ID (first 8 chars)"
+      [(ngModel)]="searchTerm"
+    />
+  </div>
+
   <div class="toast" *ngIf="message">{{ message }}</div>
   <div class="toast error" *ngIf="error">{{ error }}</div>
 
   <div class="table">
     <div class="table-head">
-      <div>Title</div>
+      <div>Title / ID</div>
       <div>Status</div>
       <div>Ends</div>
       <div>Reserve</div>
       <div>Actions</div>
     </div>
-    <div class="table-row" *ngFor="let a of auctions">
-      <div>{{ a.title }}</div>
+    <div class="table-row" *ngFor="let a of filteredAuctions">
+      <div>
+        <div>{{ a.title }}</div>
+        <div class="id-chip">#{{ formatShortId(a.id) }}</div>
+      </div>
       <div>{{ a.status }}</div>
       <div>{{ a.auctionEnd | date: 'short' }}</div>
       <div>{{ a.reservePrice }}</div>
