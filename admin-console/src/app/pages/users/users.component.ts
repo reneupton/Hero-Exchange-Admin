@@ -73,7 +73,7 @@ export class UsersComponent implements OnInit {
       this.error = 'Avatar URL required';
       return;
     }
-    this.api.post(`admin/progress/users/${username}/avatar`, { avatarUrl }).subscribe({
+    this.api.post(`progress/users/${username}/avatar`, { avatarUrl }).subscribe({
       next: () => {
         this.showMessage(`Avatar updated for ${username}`);
         this.loadUsers();

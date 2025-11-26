@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { AdminConfigService } from './services/admin-config.service';
+import { AdminSignalRService } from './services/admin-signalr.service';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,7 @@ import { AdminConfigService } from './services/admin-config.service';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   nav = [
     { path: '/', label: 'Dashboard', exact: true },
     { path: '/users', label: 'Users', exact: false },
@@ -20,13 +21,27 @@ export class AppComponent {
   ];
 
   message = '';
+  eventMessage = '';
   configForm = {
     apiBase: '',
     adminToken: '',
   };
 
-  constructor(private config: AdminConfigService) {
+  constructor(private config: AdminConfigService, private signalr: AdminSignalRService) {
     this.resetForm();
+  }
+
+  ngOnInit(): void {
+    this.signalr.connect();
+    this.signalr.onAuctionStatusChanged((evt) => {
+      this.showEvent(`Auction ${evt.auctionId} -> ${evt.status}`);
+    });
+    this.signalr.onUserAvatarUpdated((evt) => {
+      this.showEvent(`Avatar updated for ${evt.username}`);
+    });
+    this.signalr.onUserProgressAdjusted((evt) => {
+      this.showEvent(`Progress updated for ${evt.username}`);
+    });
   }
 
   saveConfig() {
@@ -42,5 +57,10 @@ export class AppComponent {
   private showMessage(msg: string) {
     this.message = msg;
     setTimeout(() => (this.message = ''), 2500);
+  }
+
+  private showEvent(msg: string) {
+    this.eventMessage = msg;
+    setTimeout(() => (this.eventMessage = ''), 4000);
   }
 }

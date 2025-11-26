@@ -31,6 +31,7 @@
   </header>
 
   <div class="toast global" *ngIf="message">{{ message }}</div>
+  <div class="toast info" *ngIf="eventMessage">{{ eventMessage }}</div>
 
   <main class="main">
     <router-outlet></router-outlet>
