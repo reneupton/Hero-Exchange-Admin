@@ -1,6 +1,6 @@
 export const environment = {
-  production: false,
-  apiBase: '/api/',
+  production: true,
+  apiBase: 'https://gateway-service-production-a4ca.up.railway.app/',
   adminToken: 'changeme-admin-token',
-  notificationsHub: 'http://localhost:7004/notifications',
+  notificationsHub: 'https://gateway-service-production-a4ca.up.railway.app/notifications',
 };
