@@ -44,7 +44,7 @@ export class DashboardComponent implements OnInit {
       bots: this.api.get<{ running: boolean; bots: any[] }>('bots/status').pipe(
         catchError(() => of({ running: false, bots: [] }))
       ),
-      users: this.api.get<any[]>('progress/users', { pageSize: 50 }).pipe(catchError(() => of([]))),
+      users: this.api.get<any[]>('admin/progress/users', { pageSize: 50 }).pipe(catchError(() => of([]))),
     }).subscribe({
       next: ({ auctions, bots, users }) => {
         const activeAuctions =

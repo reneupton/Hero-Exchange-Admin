@@ -52,7 +52,7 @@ export class UsersComponent implements OnInit {
 
   loadUsers() {
     this.loading = true;
-    this.api.get<any[]>('progress/users', { pageSize: 100 }).subscribe({
+    this.api.get<any[]>('admin/progress/users', { pageSize: 100 }).subscribe({
       next: (res) => {
         this.users = (res || []).map((u) => ({
           ...u,
@@ -69,7 +69,7 @@ export class UsersComponent implements OnInit {
   }
 
   adjustBalance(username: string, delta: number) {
-    this.api.post(`progress/users/${username}/balance`, { delta }).subscribe({
+    this.api.post(`admin/progress/users/${username}/balance`, { delta }).subscribe({
       next: () => {
         this.showMessage(`Balance updated for ${username}`);
         this.loadUsers();
@@ -79,7 +79,7 @@ export class UsersComponent implements OnInit {
   }
 
   resetCooldowns(username: string) {
-    this.api.post(`progress/users/${username}/reset-cooldowns`, {}).subscribe({
+    this.api.post(`admin/progress/users/${username}/reset-cooldowns`, {}).subscribe({
       next: () => this.showMessage(`Cooldowns reset for ${username}`),
       error: (err) => (this.error = err.message || 'Failed to reset cooldowns'),
     });
@@ -95,7 +95,7 @@ export class UsersComponent implements OnInit {
       this.error = 'Avatar URL required';
       return;
     }
-    this.api.post(`progress/users/${username}/avatar`, { avatarUrl }).subscribe({
+    this.api.post(`admin/progress/users/${username}/avatar`, { avatarUrl }).subscribe({
       next: () => {
         this.showMessage(`Avatar updated for ${username}`);
         this.loadUsers();
@@ -109,7 +109,7 @@ export class UsersComponent implements OnInit {
       this.error = 'Hero and rarity required';
       return;
     }
-    this.api.post(`progress/users/${username}/heroes`, { heroId, rarity }).subscribe({
+    this.api.post(`admin/progress/users/${username}/heroes`, { heroId, rarity }).subscribe({
       next: () => {
         this.showMessage(`Added ${rarity} ${heroId} to ${username}`);
         this.loadUsers();
@@ -123,7 +123,7 @@ export class UsersComponent implements OnInit {
       this.error = 'VariantId required to remove';
       return;
     }
-    this.api.delete(`progress/users/${username}/heroes/${variantId}`).subscribe({
+    this.api.delete(`admin/progress/users/${username}/heroes/${variantId}`).subscribe({
       next: () => {
         this.showMessage(`Removed ${variantId} from ${username}`);
         this.loadUsers();
