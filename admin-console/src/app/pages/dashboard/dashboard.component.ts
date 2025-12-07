@@ -56,6 +56,11 @@ export class DashboardComponent implements OnInit {
   recentUsers: RecentUser[] = [];
   botsList: BotInfo[] = [];
   botsRunning = false;
+  screenshots = [
+    { src: 'assets/screenshots/screenshot-2025-12-07-144759.png', label: 'Main console overview', alt: 'Admin console dashboard overview' },
+    { src: 'assets/screenshots/screenshot-2025-12-07-144834.png', label: 'Auctions management', alt: 'Auctions management screen' },
+    { src: 'assets/screenshots/screenshot-2025-12-07-144956.png', label: 'Bots runtime controls', alt: 'Bot controls screen' },
+  ];
 
   lastUpdated: Date | null = null;
   error = '';

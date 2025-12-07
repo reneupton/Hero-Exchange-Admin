@@ -1,5 +1,6 @@
 <div class="page">
-  <div class="header">
+<div class="header">
+  <div class="header-left">
     <div>
       <h1 class="title">Admin Dashboard</h1>
       <p class="subtitle">Live auctions, users, and bot health at a glance.</p>
@@ -11,10 +12,15 @@
       </button>
     </div>
   </div>
-
-  <div class="meta" *ngIf="lastUpdated">
-    Last updated: {{ lastUpdated | date: 'medium' }}
+  <div class="header-visual">
+    <img src="assets/screenshots/screenshot-2025-12-07-144759.png" alt="Admin console main screen" />
+    <div class="hero-label">Latest admin console view</div>
   </div>
+</div>
+
+<div class="meta" *ngIf="lastUpdated">
+  Last updated: {{ lastUpdated | date: 'medium' }}
+</div>
   <div class="toast error" *ngIf="error">{{ error }}</div>
 
   <!-- Metric Cards -->
@@ -93,10 +99,10 @@
           <span>No users found</span>
         </div>
       </div>
-    </div>
   </div>
+</div>
 
-  <!-- Bot Status Section -->
+<!-- Bot Status Section -->
   <div class="section full-width">
     <div class="section-header">
       <h2 class="section-title">
@@ -126,5 +132,25 @@
         <span>No bot workers configured</span>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Screenshots Section -->
+<div class="section full-width">
+  <div class="section-header">
+    <h2 class="section-title">Latest Screenshots</h2>
+    <span class="section-link">Click to open full size</span>
+  </div>
+  <div class="screenshot-grid">
+    <a
+      class="screenshot"
+      *ngFor="let shot of screenshots"
+      [href]="shot.src"
+      target="_blank"
+      rel="noreferrer"
+    >
+      <img [src]="shot.src" [alt]="shot.alt" loading="lazy" />
+      <div class="screenshot-label">{{ shot.label }}</div>
+    </a>
   </div>
 </div>
