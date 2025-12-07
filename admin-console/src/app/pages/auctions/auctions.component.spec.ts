@@ -29,7 +29,7 @@ describe('AuctionsComponent', () => {
   it('loads auctions on init', fakeAsync(() => {
     component.ngOnInit();
     tick();
-    expect(mockApi.get).toHaveBeenCalledWith('auctions', { pageSize: 50 });
+    expect(mockApi.get).toHaveBeenCalledWith('admin/auctions', { pageSize: 50 });
     expect(component.auctions.length).toBe(1);
   }));
 
@@ -46,7 +46,7 @@ describe('AuctionsComponent', () => {
   it('triggers finish and reloads', () => {
     spyOn(component, 'loadAuctions');
     component.finish('abc');
-    expect(mockApi.post).toHaveBeenCalledWith('auctions/abc/finish', {});
+    expect(mockApi.post).toHaveBeenCalledWith('admin/auctions/abc/finish', {});
     expect(component.loadAuctions).toHaveBeenCalled();
   });
 

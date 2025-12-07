@@ -54,7 +54,7 @@ export class AuctionsComponent implements OnInit {
    */
   loadAuctions() {
     this.loading = true;
-    this.api.get<any[]>('auctions', { pageSize: 50 }).subscribe({
+    this.api.get<any[]>('admin/auctions', { pageSize: 50 }).subscribe({
       next: (res) => {
         this.auctions = res || [];
         this.loading = false;
@@ -70,7 +70,7 @@ export class AuctionsComponent implements OnInit {
    * Marks an auction as finished and refreshes list.
    */
   finish(id: string) {
-    this.api.post(`auctions/${id}/finish`, {}).subscribe({
+    this.api.post(`admin/auctions/${id}/finish`, {}).subscribe({
       next: () => {
         this.showMessage('Auction marked as finished');
         this.loadAuctions();
@@ -83,7 +83,7 @@ export class AuctionsComponent implements OnInit {
    * Cancels an auction and refreshes list.
    */
   cancel(id: string) {
-    this.api.post(`auctions/${id}/cancel`, {}).subscribe({
+    this.api.post(`admin/auctions/${id}/cancel`, {}).subscribe({
       next: () => {
         this.showMessage('Auction cancelled');
         this.loadAuctions();
@@ -96,7 +96,7 @@ export class AuctionsComponent implements OnInit {
    * Triggers a search reindex job.
    */
   reindexSearch() {
-    this.api.post('search/reindex', {}).subscribe({
+    this.api.post('admin/search/reindex', {}).subscribe({
       next: () => this.showMessage('Search reindex started'),
       error: (err) => (this.error = err.message || 'Failed to trigger reindex'),
     });

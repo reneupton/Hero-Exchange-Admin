@@ -45,8 +45,8 @@ export class DashboardComponent implements OnInit {
     this.error = '';
 
     forkJoin({
-      auctions: this.api.get<any[]>('auctions', { pageSize: 100 }).pipe(catchError(() => of([]))),
-      bots: this.api.get<{ running: boolean; bots: any[] }>('bots/status').pipe(
+      auctions: this.api.get<any[]>('admin/auctions', { pageSize: 100 }).pipe(catchError(() => of([]))),
+      bots: this.api.get<{ running: boolean; bots: any[] }>('admin/bots/status').pipe(
         catchError(() => of({ running: false, bots: [] }))
       ),
       users: this.api.get<any[]>('admin/progress/users', { pageSize: 50 }).pipe(catchError(() => of([]))),

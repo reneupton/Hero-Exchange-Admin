@@ -16,9 +16,9 @@ describe('BotsComponent', () => {
     mockApi.get.calls.reset?.();
     mockApi.post.calls.reset?.();
     mockApi.get.and.callFake((path: string) => {
-      if (path === 'bots/status') return of({ running: true, bots: [{ name: 'bot1' }] });
-      if (path === 'bots/config') return of({ intervalSeconds: 5 });
-      if (path === 'bots/activity') return of({ events: [{ id: 1 }] });
+      if (path === 'admin/bots/status') return of({ running: true, bots: [{ name: 'bot1' }] });
+      if (path === 'admin/bots/config') return of({ intervalSeconds: 5 });
+      if (path === 'admin/bots/activity') return of({ events: [{ id: 1 }] });
       return of({});
     });
     mockApi.post.and.returnValue(of({ bots: [{ name: 'bot1' }] }));
@@ -42,19 +42,19 @@ describe('BotsComponent', () => {
 
   it('starts bots and updates state', () => {
     component.startBots();
-    expect(mockApi.post).toHaveBeenCalledWith('bots/start', {});
+    expect(mockApi.post).toHaveBeenCalledWith('admin/bots/start', {});
     expect(component.running).toBeTrue();
   });
 
   it('stops bots', () => {
     component.stopBots();
-    expect(mockApi.post).toHaveBeenCalledWith('bots/stop', {});
+    expect(mockApi.post).toHaveBeenCalledWith('admin/bots/stop', {});
     expect(component.running).toBeFalse();
   });
 
   it('saves configuration', () => {
     component.configDraft = { intervalSeconds: 10 };
     component.saveConfig();
-    expect(mockApi.post).toHaveBeenCalledWith('bots/config', { intervalSeconds: 10 });
+    expect(mockApi.post).toHaveBeenCalledWith('admin/bots/config', { intervalSeconds: 10 });
   });
 });

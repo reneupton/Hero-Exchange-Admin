@@ -14,13 +14,13 @@ describe('DashboardComponent', () => {
   beforeEach(async () => {
     mockApi.get.calls.reset?.();
     mockApi.get.and.callFake((path: string) => {
-      if (path === 'auctions') {
+      if (path === 'admin/auctions') {
         return of([
           { status: 'Active' },
           { status: 'Finished' },
         ]);
       }
-      if (path === 'bots/status') {
+      if (path === 'admin/bots/status') {
         return of({ running: true, bots: [{}, { lastError: 'boom' }] });
       }
       if (path === 'admin/progress/users') {

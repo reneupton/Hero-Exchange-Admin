@@ -35,7 +35,7 @@ export class BotsComponent implements OnInit {
 
   /** Reads current bot runtime status. */
   loadStatus() {
-    this.api.get<{ running: boolean; bots: any[] }>('bots/status').subscribe({
+    this.api.get<{ running: boolean; bots: any[] }>('admin/bots/status').subscribe({
       next: (res) => {
         this.running = res.running;
         this.status = res.bots || [];
@@ -46,7 +46,7 @@ export class BotsComponent implements OnInit {
 
   /** Fetches persisted bot configuration. */
   loadConfig() {
-    this.api.get<any>('bots/config').subscribe({
+    this.api.get<any>('admin/bots/config').subscribe({
       next: (res) => {
         this.config = res;
         this.configDraft = { ...res };
@@ -57,7 +57,7 @@ export class BotsComponent implements OnInit {
 
   /** Fetches recent bot activity/events. */
   loadActivity() {
-    this.api.get<{ events: any[] }>('bots/activity').subscribe({
+    this.api.get<{ events: any[] }>('admin/bots/activity').subscribe({
       next: (res) => (this.activity = res.events || []),
       error: (err) => (this.error = err.message || 'Failed to load activity'),
     });
@@ -66,7 +66,7 @@ export class BotsComponent implements OnInit {
   /** Starts bot workers. */
   startBots() {
     this.loading = true;
-    this.api.post('bots/start', {}).subscribe({
+    this.api.post('admin/bots/start', {}).subscribe({
       next: (res: any) => {
         this.running = true;
         this.status = res.bots || [];
@@ -82,7 +82,7 @@ export class BotsComponent implements OnInit {
   /** Stops bot workers. */
   stopBots() {
     this.loading = true;
-    this.api.post('bots/stop', {}).subscribe({
+    this.api.post('admin/bots/stop', {}).subscribe({
       next: () => {
         this.running = false;
         this.loading = false;
@@ -100,7 +100,7 @@ export class BotsComponent implements OnInit {
       return;
     }
     this.loading = true;
-    this.api.post('bots/config', this.configDraft).subscribe({
+    this.api.post('admin/bots/config', this.configDraft).subscribe({
       next: (res: any) => {
         this.config = res.config;
         this.configDraft = { ...res.config };
