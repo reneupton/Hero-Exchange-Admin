@@ -1,3 +1,4 @@
+// Bots admin page: control simulation bots and view activity.
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -25,12 +26,14 @@ export class BotsComponent implements OnInit {
     this.refreshAll();
   }
 
+  /** Reloads status, config and recent activity. */
   refreshAll() {
     this.loadStatus();
     this.loadConfig();
     this.loadActivity();
   }
 
+  /** Reads current bot runtime status. */
   loadStatus() {
     this.api.get<{ running: boolean; bots: any[] }>('bots/status').subscribe({
       next: (res) => {
@@ -41,6 +44,7 @@ export class BotsComponent implements OnInit {
     });
   }
 
+  /** Fetches persisted bot configuration. */
   loadConfig() {
     this.api.get<any>('bots/config').subscribe({
       next: (res) => {
@@ -51,6 +55,7 @@ export class BotsComponent implements OnInit {
     });
   }
 
+  /** Fetches recent bot activity/events. */
   loadActivity() {
     this.api.get<{ events: any[] }>('bots/activity').subscribe({
       next: (res) => (this.activity = res.events || []),
@@ -58,6 +63,7 @@ export class BotsComponent implements OnInit {
     });
   }
 
+  /** Starts bot workers. */
   startBots() {
     this.loading = true;
     this.api.post('bots/start', {}).subscribe({
@@ -73,6 +79,7 @@ export class BotsComponent implements OnInit {
     });
   }
 
+  /** Stops bot workers. */
   stopBots() {
     this.loading = true;
     this.api.post('bots/stop', {}).subscribe({
@@ -87,6 +94,7 @@ export class BotsComponent implements OnInit {
     });
   }
 
+  /** Persists configuration changes. */
   saveConfig() {
     if (!this.configDraft) {
       return;

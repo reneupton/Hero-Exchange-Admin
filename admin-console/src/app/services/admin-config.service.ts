@@ -1,3 +1,4 @@
+// Admin configuration service: stores API base and admin token, persisted in localStorage.
 import { Injectable } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
@@ -7,7 +8,7 @@ export interface AdminClientConfig {
   adminToken: string;
 }
 
-const STORAGE_KEY = 'flogit-admin-config';
+const STORAGE_KEY = 'heroexchange-admin-config';
 
 @Injectable({
   providedIn: 'root',
@@ -18,25 +19,31 @@ export class AdminConfigService {
   constructor() {
     const stored = this.readStoredConfig();
     this.config = {
-      apiBase: this.normalizeBase(stored?.apiBase || environment.apiBase),
+      apiBase: this.normaliseBase(stored?.apiBase || environment.apiBase),
       adminToken: stored?.adminToken || environment.adminToken,
     };
   }
 
+  /** Base URL used by the admin console when calling the Gateway. */
   get apiBase() {
     return this.config.apiBase;
   }
 
+  /** Admin token required by Gateway admin endpoints. */
   get adminToken() {
     return this.config.adminToken;
   }
 
+  /**
+   * Updates config and persists to localStorage when available.
+   * @param partial New values to merge into existing config.
+   */
   updateConfig(partial: Partial<AdminClientConfig>) {
     const next: AdminClientConfig = {
       ...this.config,
       ...partial,
     };
-    next.apiBase = this.normalizeBase(next.apiBase);
+    next.apiBase = this.normaliseBase(next.apiBase);
     this.config = next;
     this.persistConfig();
   }
@@ -47,11 +54,24 @@ export class AdminConfigService {
     });
   }
 
-  private normalizeBase(base: string) {
+  /**
+   * Normalises the base URL to avoid accidental double segments and ensure trailing slash.
+   */
+  private normaliseBase(base: string) {
     if (!base) return '';
     let value = base.trim();
-    // collapse accidental double prefixes like /api/api/ or /admin/admin/
-    value = value.replace(/^\/(admin|api)\/(admin|api)\/+/i, '/$1/');
+    const schemeMatch = value.match(/^(https?:)(\/\/.+)$/i);
+    if (schemeMatch) {
+      const scheme = schemeMatch[1];
+      const rest = schemeMatch[2].replace(/\/{2,}/g, '/');
+      // maintain double slash after scheme while collapsing subsequent duplicates
+      value = `${scheme}//${rest.replace(/^\/+/, '')}`;
+    } else {
+      // collapse duplicate slashes to keep predictable segments
+      value = value.replace(/\/+/g, '/');
+    }
+    // collapse accidental repeated prefixes like /api/api/ or /admin/admin/
+    value = value.replace(/^\/(admin|api)\/\1\/+/i, '/$1/');
     if (!value.endsWith('/')) {
       value = `${value}/`;
     }

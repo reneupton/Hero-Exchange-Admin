@@ -1,3 +1,4 @@
+// Users admin page: manage balances, cooldowns, avatars, and hero ownership.
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -50,6 +51,7 @@ export class UsersComponent implements OnInit {
     this.loadUsers();
   }
 
+  /** Pulls paged user data from admin API and normalises defaults for forms. */
   loadUsers() {
     this.loading = true;
     this.api.get<any[]>('admin/progress/users', { pageSize: 100 }).subscribe({
@@ -68,6 +70,7 @@ export class UsersComponent implements OnInit {
     });
   }
 
+  /** Adjusts user wallet balance by delta. */
   adjustBalance(username: string, delta: number) {
     this.api.post(`admin/progress/users/${username}/balance`, { delta }).subscribe({
       next: () => {
@@ -78,6 +81,7 @@ export class UsersComponent implements OnInit {
     });
   }
 
+  /** Resets user cooldowns (e.g., daily summons). */
   resetCooldowns(username: string) {
     this.api.post(`admin/progress/users/${username}/reset-cooldowns`, {}).subscribe({
       next: () => this.showMessage(`Cooldowns reset for ${username}`),
@@ -85,11 +89,13 @@ export class UsersComponent implements OnInit {
     });
   }
 
+  /** Updates last message area with auto clear. */
   private showMessage(msg: string) {
     this.message = msg;
     setTimeout(() => (this.message = ''), 3000);
   }
 
+  /** Updates user avatar URL. */
   updateAvatar(username: string, avatarUrl?: string) {
     if (!avatarUrl) {
       this.error = 'Avatar URL required';
@@ -104,6 +110,7 @@ export class UsersComponent implements OnInit {
     });
   }
 
+  /** Adds a hero to a user account. */
   addHero(username: string, heroId?: string, rarity?: string) {
     if (!heroId || !rarity) {
       this.error = 'Hero and rarity required';
@@ -118,6 +125,7 @@ export class UsersComponent implements OnInit {
     });
   }
 
+  /** Removes hero variant from a user account. */
   removeHero(username: string, variantId?: string) {
     if (!variantId) {
       this.error = 'VariantId required to remove';

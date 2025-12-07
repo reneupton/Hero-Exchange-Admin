@@ -1,3 +1,4 @@
+// SignalR subscription manager for admin live events.
 import { Injectable, NgZone } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { environment } from '../../environments/environment';
@@ -39,14 +40,15 @@ export class AdminSignalRService {
 
   constructor(private zone: NgZone) {}
 
+  /**
+   * Opens a SignalR connection to the notifications hub and wires event handlers.
+   * No-op if already connected to avoid duplicate connections.
+   */
   connect() {
     if (this.connection) {
       return;
     }
-    this.connection = new signalR.HubConnectionBuilder()
-      .withUrl(this.notifyUrl)
-      .withAutomaticReconnect()
-      .build();
+    this.connection = this.buildConnection();
 
     this.connection
       .start()
@@ -63,15 +65,31 @@ export class AdminSignalRService {
     });
   }
 
+  /**
+   * Subscribes to auction status changes.
+   */
   onAuctionStatusChanged(handler: (e: AuctionStatusChangedEvent) => void) {
     this.auctionStatusHandlers.push(handler);
   }
 
+  /**
+   * Subscribes to avatar updates.
+   */
   onUserAvatarUpdated(handler: (e: UserAvatarUpdatedEvent) => void) {
     this.avatarHandlers.push(handler);
   }
 
+  /**
+   * Subscribes to user progress adjustments (balance/xp).
+   */
   onUserProgressAdjusted(handler: (e: UserProgressAdjustedEvent) => void) {
     this.progressHandlers.push(handler);
+  }
+
+  /**
+   * Builds a hub connection; kept separate for testability.
+   */
+  protected buildConnection(): signalR.HubConnection {
+    return new signalR.HubConnectionBuilder().withUrl(this.notifyUrl).withAutomaticReconnect().build();
   }
 }

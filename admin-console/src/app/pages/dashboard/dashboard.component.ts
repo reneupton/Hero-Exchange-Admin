@@ -1,3 +1,4 @@
+// Dashboard admin page: aggregates quick metrics across services.
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { AdminApiService } from '../../services/admin-api.service';
@@ -35,6 +36,10 @@ export class DashboardComponent implements OnInit {
     this.loadMetrics();
   }
 
+  /**
+   * Pulls auctions, bots, and user counts concurrently and maps into dashboard cards.
+   * Uses catchError to keep the card layout stable even if one call fails.
+   */
   loadMetrics() {
     this.loading = true;
     this.error = '';

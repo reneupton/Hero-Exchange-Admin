@@ -1,3 +1,4 @@
+// Auctions admin page: manage auctions and trigger search reindex.
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -15,7 +16,7 @@ export class AuctionsComponent implements OnInit {
   loading = false;
   message = '';
   error = '';
-   searchTerm = '';
+  searchTerm = '';
 
   constructor(private api: AdminApiService) {}
 
@@ -23,6 +24,9 @@ export class AuctionsComponent implements OnInit {
     this.loadAuctions();
   }
 
+  /**
+   * Client-side filter for auctions by id/title/status.
+   */
   get filteredAuctions() {
     const term = (this.searchTerm || '').trim().toLowerCase();
     if (!term) return this.auctions;
@@ -38,10 +42,16 @@ export class AuctionsComponent implements OnInit {
     });
   }
 
+  /**
+   * Formats a compact uppercase id for display.
+   */
   formatShortId(id: string) {
     return (id || '').replace(/-/g, '').slice(0, 8).toUpperCase();
   }
 
+  /**
+   * Loads auctions from admin API.
+   */
   loadAuctions() {
     this.loading = true;
     this.api.get<any[]>('auctions', { pageSize: 50 }).subscribe({
@@ -56,6 +66,9 @@ export class AuctionsComponent implements OnInit {
     });
   }
 
+  /**
+   * Marks an auction as finished and refreshes list.
+   */
   finish(id: string) {
     this.api.post(`auctions/${id}/finish`, {}).subscribe({
       next: () => {
@@ -66,6 +79,9 @@ export class AuctionsComponent implements OnInit {
     });
   }
 
+  /**
+   * Cancels an auction and refreshes list.
+   */
   cancel(id: string) {
     this.api.post(`auctions/${id}/cancel`, {}).subscribe({
       next: () => {
@@ -76,6 +92,9 @@ export class AuctionsComponent implements OnInit {
     });
   }
 
+  /**
+   * Triggers a search reindex job.
+   */
   reindexSearch() {
     this.api.post('search/reindex', {}).subscribe({
       next: () => this.showMessage('Search reindex started'),
@@ -83,6 +102,7 @@ export class AuctionsComponent implements OnInit {
     });
   }
 
+  /** Displays a transient confirmation toast. */
   private showMessage(msg: string) {
     this.message = msg;
     setTimeout(() => (this.message = ''), 3000);

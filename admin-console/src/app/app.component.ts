@@ -1,3 +1,4 @@
+// Root shell for admin console: config form + live event toasts.
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -32,6 +33,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // open websocket connection and surface admin events as toast
     this.signalr.connect();
     this.signalr.onAuctionStatusChanged((evt) => {
       this.showEvent(`Auction ${evt.auctionId} -> ${evt.status}`);
@@ -44,11 +46,13 @@ export class AppComponent implements OnInit {
     });
   }
 
+  /** Saves API config to localStorage via service. */
   saveConfig() {
     this.config.updateConfig(this.configForm);
     this.showMessage('Admin API config saved');
   }
 
+  /** Resets form fields to persisted values. */
   resetForm() {
     this.configForm.apiBase = this.config.apiBase;
     this.configForm.adminToken = this.config.adminToken;
