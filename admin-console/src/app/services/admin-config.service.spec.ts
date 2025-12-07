@@ -32,20 +32,13 @@ describe('AdminConfigService', () => {
     expect(parsed.adminToken).toBe('new-token');
   });
 
-  it('reads and normalises persisted config (including legacy key)', () => {
+  it('reads and normalises persisted config', () => {
     const stored = { apiBase: '/api//admin/', adminToken: 'stored-token' };
-    const getSpy = spyOn(window.localStorage, 'getItem').and.callFake((key: string) => {
-      if (key === 'heroexchange-admin-config') return null;
-      if (key === 'flogit-admin-config') return JSON.stringify(stored);
-      return null;
-    });
+    const getSpy = spyOn(window.localStorage, 'getItem').and.returnValue(JSON.stringify(stored));
     const service = new AdminConfigService();
 
     expect(service.apiBase).toBe('/api/admin/');
     expect(service.adminToken).toBe('stored-token');
-    // should have tried new key first, then legacy
-    const callOrder = getSpy.calls.allArgs().map((args) => args[0]);
-    expect(callOrder[0]).toBe('heroexchange-admin-config');
-    expect(callOrder).toContain('flogit-admin-config');
+    expect(getSpy).toHaveBeenCalledWith('heroexchange-admin-config');
   });
 });

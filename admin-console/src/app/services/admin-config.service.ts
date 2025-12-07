@@ -9,7 +9,6 @@ export interface AdminClientConfig {
 }
 
 const STORAGE_KEY = 'heroexchange-admin-config';
-const LEGACY_KEYS = ['flogit-admin-config'];
 
 @Injectable({
   providedIn: 'root',
@@ -80,22 +79,16 @@ export class AdminConfigService {
   }
 
   /**
-   * Reads stored config, checking legacy keys for backward compatibility.
+   * Reads stored config.
    */
   private readStoredConfig(): AdminClientConfig | null {
-    const keysToTry = [STORAGE_KEY, ...LEGACY_KEYS];
-    for (const key of keysToTry) {
-      try {
-        const raw = localStorage.getItem(key);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          return parsed;
-        }
-      } catch {
-        // ignore invalid JSON / storage issues
-      }
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? (JSON.parse(raw) as AdminClientConfig) : null;
+    } catch {
+      // ignore invalid JSON / storage issues
+      return null;
     }
-    return null;
   }
 
   private persistConfig() {
