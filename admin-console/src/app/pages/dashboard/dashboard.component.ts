@@ -144,7 +144,7 @@ export class DashboardComponent implements OnInit {
     return 'status-default';
   }
 
-  formatCurrency(value: number): string {
-    return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(value);
+  formatGold(value: number): string {
+    return new Intl.NumberFormat('en-GB').format(value) + ' Gold';
   }
 }

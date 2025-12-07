@@ -51,7 +51,7 @@
             <tr *ngFor="let auction of recentAuctions">
               <td class="auction-title">{{ auction.title }}</td>
               <td><span class="status-badge" [ngClass]="getStatusClass(auction.status)">{{ auction.status }}</span></td>
-              <td class="bid-amount">{{ formatCurrency(auction.currentHighBid) }}</td>
+              <td class="bid-amount">{{ formatGold(auction.currentHighBid) }}</td>
               <td class="end-date">{{ auction.auctionEnd | date: 'short' }}</td>
             </tr>
           </tbody>
@@ -82,7 +82,7 @@
           <tbody>
             <tr *ngFor="let user of recentUsers">
               <td class="username">{{ user.username }}</td>
-              <td class="balance">{{ formatCurrency(user.balance) }}</td>
+              <td class="balance">{{ formatGold(user.balance) }}</td>
               <td class="auctions-won">{{ user.auctionsWon }}</td>
               <td class="level"><span class="level-badge">Lvl {{ user.level }}</span></td>
             </tr>
