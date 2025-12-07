@@ -151,8 +151,10 @@ export class DashboardComponent implements OnInit {
 
   /** Resolves a user's balance across possible field names. */
   private resolveBalance(u: any): number {
-    const fields = ['balance', 'flogBalance', 'walletBalance', 'goldBalance', 'gold'];
-    for (const f of fields) {
+    const preferred = u?.goldBalance;
+    if (typeof preferred === 'number') return preferred;
+    const legacy = ['balance', 'flogBalance', 'walletBalance', 'gold'] as const;
+    for (const f of legacy) {
       const val = u?.[f];
       if (typeof val === 'number') return val;
     }

@@ -7,10 +7,6 @@ import { AdminApiService } from '../../services/admin-api.service';
 type OwnedHero = { name: string; rarity: string; variantId: string };
 type AdminUser = {
   username: string;
-  flogBalance?: number;
-  balance?: number;
-  walletBalance?: number;
-  gold?: number;
   goldBalance?: number;
   experience?: number;
   totalHeroPower?: number;
@@ -147,10 +143,13 @@ export class UsersComponent implements OnInit {
 
   /** Resolves balance from various backend field names. */
   private resolveBalance(u: Partial<AdminUser>) {
-    const fields = ['flogBalance', 'balance', 'walletBalance', 'goldBalance', 'gold'] as const;
-    for (const f of fields) {
-      const val = (u as any)?.[f];
-      if (typeof val === 'number') return val;
+    // Prefer goldBalance; fall back to known legacy fields for compatibility.
+    const val = (u as any)?.goldBalance;
+    if (typeof val === 'number') return val;
+    const legacyFields = ['flogBalance', 'balance', 'walletBalance', 'gold'] as const;
+    for (const f of legacyFields) {
+      const legacyVal = (u as any)?.[f];
+      if (typeof legacyVal === 'number') return legacyVal;
     }
     return 0;
   }
