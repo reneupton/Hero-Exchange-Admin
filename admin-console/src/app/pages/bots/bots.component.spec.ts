@@ -46,6 +46,11 @@ describe('BotsComponent', () => {
     expect(component.running).toBeTrue();
   });
 
+  it('clears errors', () => {
+    component.clearErrors();
+    expect(mockApi.post).toHaveBeenCalledWith('admin/bots/clear-errors', {});
+  });
+
   it('stops bots', () => {
     component.stopBots();
     expect(mockApi.post).toHaveBeenCalledWith('admin/bots/stop', {});

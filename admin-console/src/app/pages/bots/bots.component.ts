@@ -33,6 +33,21 @@ export class BotsComponent implements OnInit {
     this.loadActivity();
   }
 
+  /** Clears last error fields for bots to reduce noise. */
+  clearErrors() {
+    this.loading = true;
+    this.api.post('admin/bots/clear-errors', {}).subscribe({
+      next: () => {
+        this.loadStatus();
+        this.loading = false;
+      },
+      error: (err) => {
+        this.error = err.message || 'Failed to clear errors';
+        this.loading = false;
+      },
+    });
+  }
+
   /** Reads current bot runtime status. */
   loadStatus() {
     this.api.get<{ running: boolean; bots: any[] }>('admin/bots/status').subscribe({

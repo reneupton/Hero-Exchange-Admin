@@ -11,6 +11,7 @@
       <button class="ghost-btn" type="button" [disabled]="loading || !running" (click)="stopBots()">
         Stop
       </button>
+      <button class="ghost-btn" type="button" [disabled]="loading" (click)="clearErrors()">Clear errors</button>
       <button class="ghost-btn" type="button" [disabled]="loading" (click)="refreshAll()">Refresh</button>
     </div>
   </div>
