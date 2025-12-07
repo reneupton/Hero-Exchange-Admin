@@ -7,7 +7,11 @@ import { AdminApiService } from '../../services/admin-api.service';
 type OwnedHero = { name: string; rarity: string; variantId: string };
 type AdminUser = {
   username: string;
-  flogBalance: number;
+  flogBalance?: number;
+  balance?: number;
+  walletBalance?: number;
+  gold?: number;
+  goldBalance?: number;
   experience?: number;
   totalHeroPower?: number;
   level: number;
@@ -58,6 +62,7 @@ export class UsersComponent implements OnInit {
       next: (res) => {
         this.users = (res || []).map((u) => ({
           ...u,
+          goldBalance: this.resolveBalance(u),
           heroId: u.heroId || this.heroOptions[0].id,
           heroRarity: u.heroRarity || 'Common',
         }));
@@ -138,5 +143,15 @@ export class UsersComponent implements OnInit {
       },
       error: (err) => (this.error = err.message || 'Failed to remove hero'),
     });
+  }
+
+  /** Resolves balance from various backend field names. */
+  private resolveBalance(u: Partial<AdminUser>) {
+    const fields = ['flogBalance', 'balance', 'walletBalance', 'goldBalance', 'gold'] as const;
+    for (const f of fields) {
+      const val = (u as any)?.[f];
+      if (typeof val === 'number') return val;
+    }
+    return 0;
   }
 }
