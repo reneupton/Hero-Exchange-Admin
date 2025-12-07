@@ -108,14 +108,15 @@ export class DashboardComponent implements OnInit {
 
         // Recent users (top 5 by balance or level)
         this.recentUsers = userList
-          .sort((a, b) => (b.balance || 0) - (a.balance || 0))
-          .slice(0, 5)
           .map((u) => ({
             username: u.username || u.userName || 'Anonymous',
-            balance: u.balance || 0,
+            balance: this.resolveBalance(u),
             auctionsWon: u.auctionsWon || 0,
             level: u.level || 1,
-          }));
+          }))
+          .sort((a, b) => b.balance - a.balance || b.level - a.level)
+          .slice(0, 5)
+          .map((u) => u);
 
         // Bot details
         this.botsRunning = bots.running;
@@ -146,5 +147,15 @@ export class DashboardComponent implements OnInit {
 
   formatGold(value: number): string {
     return new Intl.NumberFormat('en-GB').format(value) + ' Gold';
+  }
+
+  /** Resolves a user's balance across possible field names. */
+  private resolveBalance(u: any): number {
+    const fields = ['balance', 'flogBalance', 'walletBalance', 'goldBalance', 'gold'];
+    for (const f of fields) {
+      const val = u?.[f];
+      if (typeof val === 'number') return val;
+    }
+    return 0;
   }
 }
