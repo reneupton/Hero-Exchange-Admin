@@ -2,23 +2,129 @@
   <div class="header">
     <div>
       <h1 class="title">Admin Dashboard</h1>
-      <p class="subtitle">Live auctions, users, and bot health.</p>
+      <p class="subtitle">Live auctions, users, and bot health at a glance.</p>
     </div>
     <div class="actions">
-      <button class="ghost-btn" type="button" [disabled]="loading" (click)="loadMetrics()">Refresh</button>
+      <button class="ghost-btn" type="button" [disabled]="loading" (click)="loadMetrics()">
+        <span *ngIf="loading">Loading...</span>
+        <span *ngIf="!loading">Refresh</span>
+      </button>
     </div>
   </div>
 
   <div class="meta" *ngIf="lastUpdated">
-    Last updated: {{ lastUpdated | date: 'shortTime' }}
+    Last updated: {{ lastUpdated | date: 'medium' }}
   </div>
   <div class="toast error" *ngIf="error">{{ error }}</div>
 
+  <!-- Metric Cards -->
   <div class="card-grid">
-    <div class="card" *ngFor="let card of cards" [class.loading]="loading">
-      <div class="card-title">{{ card.title }}</div>
-      <div class="card-value">{{ card.value }}</div>
-      <div class="card-hint">{{ card.hint }}</div>
+    <div class="card metric-card" *ngFor="let card of cards" [class.loading]="loading" [attr.data-color]="card.color">
+      <div class="card-icon">{{ card.icon }}</div>
+      <div class="card-content">
+        <div class="card-title">{{ card.title }}</div>
+        <div class="card-value">{{ card.value }}</div>
+        <div class="card-hint">{{ card.hint }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Two Column Layout for Tables -->
+  <div class="dashboard-grid">
+    <!-- Recent Auctions Section -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">Recent Auctions</h2>
+        <a routerLink="/auctions" class="section-link">View all</a>
+      </div>
+      <div class="table-container" [class.loading]="loading">
+        <table class="data-table" *ngIf="recentAuctions.length > 0">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Status</th>
+              <th>High Bid</th>
+              <th>Ends</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let auction of recentAuctions">
+              <td class="auction-title">{{ auction.title }}</td>
+              <td><span class="status-badge" [ngClass]="getStatusClass(auction.status)">{{ auction.status }}</span></td>
+              <td class="bid-amount">{{ formatCurrency(auction.currentHighBid) }}</td>
+              <td class="end-date">{{ auction.auctionEnd | date: 'short' }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="empty-state" *ngIf="recentAuctions.length === 0 && !loading">
+          <span class="empty-icon">🔨</span>
+          <span>No auctions found</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Users Section -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">Top Users</h2>
+        <a routerLink="/users" class="section-link">View all</a>
+      </div>
+      <div class="table-container" [class.loading]="loading">
+        <table class="data-table" *ngIf="recentUsers.length > 0">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Balance</th>
+              <th>Won</th>
+              <th>Level</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of recentUsers">
+              <td class="username">{{ user.username }}</td>
+              <td class="balance">{{ formatCurrency(user.balance) }}</td>
+              <td class="auctions-won">{{ user.auctionsWon }}</td>
+              <td class="level"><span class="level-badge">Lvl {{ user.level }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="empty-state" *ngIf="recentUsers.length === 0 && !loading">
+          <span class="empty-icon">👥</span>
+          <span>No users found</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bot Status Section -->
+  <div class="section full-width">
+    <div class="section-header">
+      <h2 class="section-title">
+        Bot Workers
+        <span class="status-indicator" [class.running]="botsRunning" [class.stopped]="!botsRunning">
+          {{ botsRunning ? 'Online' : 'Offline' }}
+        </span>
+      </h2>
+      <a routerLink="/bots" class="section-link">Manage bots</a>
+    </div>
+    <div class="bots-grid" [class.loading]="loading">
+      <div class="bot-card" *ngFor="let bot of botsList" [class.error]="bot.status === 'Error'">
+        <div class="bot-header">
+          <span class="bot-icon">🤖</span>
+          <span class="bot-name">{{ bot.name }}</span>
+          <span class="bot-status" [class.ok]="bot.status === 'OK'" [class.error]="bot.status === 'Error'">
+            {{ bot.status }}
+          </span>
+        </div>
+        <div class="bot-details" *ngIf="bot.lastAction || bot.lastError">
+          <div class="bot-action" *ngIf="bot.lastAction">Last: {{ bot.lastAction }}</div>
+          <div class="bot-error" *ngIf="bot.lastError">{{ bot.lastError }}</div>
+        </div>
+      </div>
+      <div class="empty-state" *ngIf="botsList.length === 0 && !loading">
+        <span class="empty-icon">🤖</span>
+        <span>No bot workers configured</span>
+      </div>
     </div>
   </div>
 </div>
