@@ -77,7 +77,7 @@ npm test
 Runs Karma/Jasmine unit tests for components and services.
 
 ## Deployment notes
-- Build artefacts are static and can be hosted on Vercel; set environment values to point at the live gateway and notifications hub.
+- Build artifacts are static and can be hosted on Vercel; set environment values to point at the live gateway and notifications hub.
 - Custom domain: map `admin.hero-exchange.live` to the Vercel project and configure HTTPS.
 
 ## Future improvements
@@ -86,7 +86,7 @@ Runs Karma/Jasmine unit tests for components and services.
 3) Expand dashboards with auction latency/error rates and bot queue depth.
 
 ## Licence
-Demo project for portfolio/educational use.
+Demo project for portfolio use.
 
 ## Contact
 - Maintainer: Rene Upton (reneupton@pm.me)
